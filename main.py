@@ -65,11 +65,10 @@ def main():
 
         time_records.append(time.time() - starting_time)
 
-        for _ in range(10):
-            approx_time = round(
-                int(statistics.mean(time_records) * (system.days - day_counter)) / 60, 2
-            )
-            print(f"Aprox. estimated time to finish: {approx_time} minutes")
+        approx_time = round(
+            (statistics.mean(time_records) * max(0, system.days - day_counter)) / 60, 2
+        )
+        print(f"[{system.current_iteration_day.strftime('%Y-%m-%d')}] Approx. estimated time remaining: {approx_time} minutes")
 
         day_counter += 1
 

@@ -71,8 +71,8 @@ class GitBuilder:
     def set_remote_repository(self, repo):
         """todo"""
         command = f"git remote set-url origin {repo}"
-
-        os.system(command)
+        if os.system(command) != 0:
+            os.system(f"git remote add origin {repo}")
 
     def add(self):
         """todo"""

@@ -53,17 +53,66 @@ class GithubFillerConfig:
 
     def ask_configs(self, return_configs=False):
         """todo"""
+        import sys
+        existing = {}
+        try:
+            with open(self.cfg_dir / CONFIG, "r", encoding="utf-8") as file:
+                existing = json.load(file)
+        except Exception:
+            pass
 
-        self.repository = input("Repository URL: ")
-        self.branch = input("Branch (Default: master (RECOMENDED) ): ")
-        self.commits = input(
-            "Number of Daily commits (Default: Random (RECOMENDED) ): "
-        )
-        self.file = input("Commit File type (Default: py): ")
-        print("Please follow date formating (year, month, day): Example: 2024, 1, 12")
-        print("NOTE: No leading zeros.")
-        self.starting_date = input("Enter starting date: ")
-        self.ending_date = input("Enter ending date: ")
+        if not sys.stdin.isatty() and existing.get("repository"):
+            self.repository = existing.get("repository", "")
+            self.branch = existing.get("branch", "master")
+            self.commits = existing.get("commits", "random")
+            self.file = existing.get("file", "py")
+            self.starting_date = existing.get("starting_date", "")
+            self.ending_date = existing.get("ending_date", "")
+        else:
+            try:
+                self.repository = input(f"Repository URL [{existing.get('repository', '')}]: ").strip()
+            except Exception:
+                self.repository = ""
+            if not self.repository and "repository" in existing:
+                self.repository = existing["repository"]
+
+            try:
+                self.branch = input(f"Branch (Default: {existing.get('branch', 'master')}): ").strip()
+            except Exception:
+                self.branch = ""
+            if not self.branch:
+                self.branch = existing.get("branch", "master")
+
+            try:
+                self.commits = input(f"Number of Daily commits (Default: {existing.get('commits', 'random')}): ").strip()
+            except Exception:
+                self.commits = ""
+            if not self.commits:
+                self.commits = existing.get("commits", "random")
+
+            try:
+                self.file = input(f"Commit File type (Default: {existing.get('file', 'py')}): ").strip()
+            except Exception:
+                self.file = ""
+            if not self.file:
+                self.file = existing.get("file", "py")
+
+            print("Please follow date formating (year, month, day): Example: 2024, 1, 12")
+            print("NOTE: No leading zeros.")
+
+            try:
+                self.starting_date = input(f"Enter starting date [{existing.get('starting_date', '')}]: ").strip()
+            except Exception:
+                self.starting_date = ""
+            if not self.starting_date and "starting_date" in existing:
+                self.starting_date = existing["starting_date"]
+
+            try:
+                self.ending_date = input(f"Enter ending date [{existing.get('ending_date', '')}]: ").strip()
+            except Exception:
+                self.ending_date = ""
+            if not self.ending_date and "ending_date" in existing:
+                self.ending_date = existing["ending_date"]
 
         configs = self.declare_settings()
 
