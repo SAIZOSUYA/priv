@@ -48,6 +48,7 @@ def main():
 
     time_records = []
     day_counter = 0
+    push_counter = 0
 
     while system.current_iteration_day != system.ending_date:
 
@@ -59,7 +60,9 @@ def main():
 
             git.execute(push=False, date=date)
 
-        git.push()
+        push_counter += 1
+        if push_counter % 10 == 0:
+            git.push()
 
         system.next_day()
 
@@ -71,6 +74,8 @@ def main():
         print(f"[{system.current_iteration_day.strftime('%Y-%m-%d')}] Approx. estimated time remaining: {approx_time} minutes")
 
         day_counter += 1
+
+    git.push()
 
 
 def read_date(date: str):
