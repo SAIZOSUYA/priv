@@ -65,6 +65,12 @@ class GitBuilder:
 
     def init_repository(self):
         """todo"""
+        lock_file = Path(self.directory).parent / ".git" / "index.lock"
+        if lock_file.exists():
+            try:
+                lock_file.unlink()
+            except Exception:
+                pass
         command = "git init"
         os.system(command)
 
